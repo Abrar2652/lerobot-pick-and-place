@@ -1,0 +1,28 @@
+defaults:
+  - default
+  - env/aloha_gym_local
+  - _self_
+
+target_policy: act
+
+# Environment config (will be overridden by command line)
+env:
+  task: AlohaPickAndPlace-v0
+  batch_size: 1
+  # task: AlohaInsertion-v0
+
+# Dataset parameters
+data_file: ???  # Required: path to yaml file with episodes
+repo_id: ???   # Required: dataset identifier
+fps: 30
+root: "data"
+play_sounds: true
+
+# Dataset writing parameters
+num_image_writer_processes: 1
+num_image_writer_threads: 1
+
+# Evaluation settings (force single environment)
+eval:
+  use_async_envs: false
+  n_envs: 1
