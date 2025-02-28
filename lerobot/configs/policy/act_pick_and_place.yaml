@@ -16,7 +16,7 @@ training:
   save_freq: 20000
   save_checkpoint: true
 
-  batch_size: 2
+  batch_size: 4
   lr: 1e-5
   lr_backbone: 1e-5
   weight_decay: 1e-4
@@ -27,8 +27,8 @@ training:
     action: "[i / ${fps} for i in range(${policy.chunk_size})]"
 
 eval:
-  n_episodes: 50
-  batch_size: 50
+  n_episodes: 100
+  batch_size: 100
 
 # See `configuration_act.py` for more details.
 policy:
@@ -36,8 +36,8 @@ policy:
 
   # Input / output structure.
   n_obs_steps: 1
-  chunk_size: 30 # chunk_size
-  n_action_steps: 30
+  chunk_size: 50 # chunk_size
+  n_action_steps: 50
 
   input_shapes:
     # TODO(rcadene, alexander-soare): add variables for height and width from the dataset/env?

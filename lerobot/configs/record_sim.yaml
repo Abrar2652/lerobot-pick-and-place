@@ -13,14 +13,16 @@ env:
 
 # Dataset parameters
 data_file: ???  # Required: path to yaml file with episodes
+num_samples: null # Optional. number of samples (or episodes) to include from the datafile
 repo_id: ???   # Required: dataset identifier
 fps: 30
 root: "data"
 play_sounds: true
 
 # Dataset writing parameters
-num_image_writer_processes: 1
-num_image_writer_threads: 1
+num_image_writer_processes: 0
+# 4 threads per camera is recommended. See populate_dataset.py:start_image_writer
+num_image_writer_threads: 8
 
 # Evaluation settings (force single environment)
 eval:

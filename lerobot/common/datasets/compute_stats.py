@@ -20,6 +20,7 @@ import einops
 import torch
 import tqdm
 from datasets import Image
+import gc
 
 from lerobot.common.datasets.video_utils import VideoFrame
 
@@ -121,6 +122,14 @@ def compute_stats(dataset, batch_size=8, num_workers=8, max_num_samples=None):
             mean[key] = mean[key] + this_batch_size * (batch_mean - mean[key]) / running_item_count
             max[key] = torch.maximum(max[key], einops.reduce(batch[key], pattern, "max"))
             min[key] = torch.minimum(min[key], einops.reduce(batch[key], pattern, "min"))
+            
+            # Clear intermediate tensors
+            del batch_mean
+        
+        # Clear the batch data after processing
+        del batch
+        # Force garbage collection
+        gc.collect()
 
         if i == ceil(max_num_samples / batch_size) - 1:
             break

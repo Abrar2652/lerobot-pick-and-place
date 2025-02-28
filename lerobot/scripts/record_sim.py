@@ -21,6 +21,7 @@ from lerobot.common.datasets.populate_dataset import (
 from lerobot.common.envs.factory import make_env
 from lerobot.common.utils.utils import init_logging, log_say
 import matplotlib.pyplot as plt
+import random
 
 def load_replay_data(yaml_path: str) -> List[Dict]:
     """
@@ -105,15 +106,16 @@ def create_replay_dataset(
                 obs, reward, terminated, truncated, info = single_env.step(action)
 
                 # Create observation dictionary with proper keys
-                camera_name = 'top'
                 # TODO: add other cameras and invoke env.render() with it.
                 # TODO: use obs['observation.image.top']
                 # TODO: set next.* properly
                 if target_policy == 'act':
                     observation = {
                         'observation.state': torch.tensor(obs['agent_pos']) if isinstance(obs, dict) else torch.tensor(obs),
-                        f'observation.images.{camera_name}': torch.tensor(single_env.render().copy()) if hasattr(single_env, 'render') else None,
                     }
+                    for view_name in obs['pixels'].keys():
+                        observation[f'observation.images.{view_name}'] = torch.tensor(obs['pixels'][view_name])
+
                 elif target_policy == 'diffusion':
                     image = torch.tensor(single_env.render().copy()) if hasattr(single_env, 'render') else None
                     # permute dimensions to (C, H, W)
@@ -170,6 +172,11 @@ def main(cfg: DictConfig):
     
     # Load episodes from YAML
     episodes = load_replay_data(cfg.data_file)
+    
+    # Check if num_samples is specified in the config
+    if 'num_samples' in cfg and cfg.num_samples is not None:
+        num_samples = min(len(episodes), cfg.num_samples)
+        episodes = random.sample(episodes, num_samples)
     
     # Create environment with n_envs=1 for replay
     cfg.eval.n_envs = 1  # Force single environment

@@ -1,8 +1,10 @@
 export MUJOCO_GL=egl
 #conda activate lerobot
 
-POLICY=act
 POLICY=diffusion
+POLICY=act
+NUM_SAMPLES=20
+OBS_TYPE=pixels_agent_pos_obj_doubleview
 
 # specify DATA_DIR to avoid downloading the dataset
 # policy=act \
@@ -21,7 +23,7 @@ DATA_DIR=data python lerobot/scripts/train.py \
     eval.n_episodes=2000 \
     eval.batch_size=4 \
     wandb.enable=false \
-    dataset_repo_id=pick_and_place/sim_${POLICY}
+    dataset_repo_id=pick_and_place/sim_${POLICY}_${OBS_TYPE}_${NUM_SAMPLES} \
     # dataset_repo_id=user/sim_dataset
     # training.save_model=true \
     # hydra.run.dir=outputs/train/act_aloha_sim_transfer_cube_human \
